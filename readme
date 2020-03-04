@@ -1,0 +1,7 @@
+compile:
+`g++ -o d01.out *.cpp -O1 -std=c++11`
+
+run:
+`./d01.out PATH/TO/FILE.txt`
+ 
+
