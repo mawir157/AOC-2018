@@ -32,7 +32,7 @@ main :: IO()
 main = do
     let letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
                    'n','o','p','q','r','s','t','u','v','w','x','y','z']
-    f <- readFile "input"
+    f <- readFile "input_02.txt"
     let l = lines $ f
     let m = map (countChars $ letters) l
     let two = length $ filter (countInt 2) m

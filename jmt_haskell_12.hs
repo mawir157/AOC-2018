@@ -39,7 +39,7 @@ tickTock rs n x = (iterate (tick rs) x) !! n
 
 main :: IO()     
 main = do
-  f <- readFile "input"
+  f <- readFile "input_12.txt"
   let l = lines f
   let st = parseState $ head l -- first line is state
   let rs = map (parseRule) (drop 2 l) -- lines 3 onwards are rules

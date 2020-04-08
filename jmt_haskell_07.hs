@@ -68,7 +68,7 @@ node2Time :: Integer -> Char -> Integer
 node2Time x c = toInteger (ord c) - 64 + x
 
 main = do 
-  f <- readFile "input"
+  f <- readFile "input_07.txt"
   let es = map (parseInput) $ lines f
   --let es = [('C','A'),('C','F'),('A','B'),('A','D'),('B','E'),('D','E'),('F','E')]
   let vs = unique $ (map (fst) $ es) ++ (map (snd) $ es)

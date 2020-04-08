@@ -101,7 +101,7 @@ void World::fill_vert(Water* pw)
         pw->live = false;
         const int x = pw->pos.x;
         const int y = pw->pos.y;
-        head = Water(x, y + 1, false);
+        Water head = Water(x, y + 1, false);
         water.emplace_back(head);
 
         std::cout << head.pos.x << "," << head.pos.y << std::endl;
@@ -118,7 +118,7 @@ void World::fill_horz(Water* pw)
         pw->live = false;
         const int x = pw->pos.x;
         const int y = pw->pos.y;
-        head = Water(x - 1, y, true);
+        Water head = Water(x - 1, y, true);
         if (!check_down(head)) // if there's ground beneath keep going
         {
             head.live = false;
@@ -136,7 +136,7 @@ void World::fill_horz(Water* pw)
         pw->live = false;
         const int x = head.pos.x;
         const int y = head.pos.y;
-        head = Water(x - 1, y, true);
+        Water head = Water(x - 1, y, true);
         if (!check_down(head)) // if there's ground beneath keep going
         {
             head.live = false;

@@ -126,7 +126,7 @@ applyOpCode dev devApply opp
 
 main :: IO()
 main = do
-  f <- readFile "input"  
+  f <- readFile "input_16.txt"  
   let l = lines $ f
   let part1 = chunksOf 4 $ take 3116 l
   let devs = map(parseInput1) part1

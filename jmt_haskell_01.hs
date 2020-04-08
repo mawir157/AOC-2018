@@ -23,7 +23,7 @@ dup xs = dup' xs Set.empty
 
 main :: IO()     
 main = do 
-    f <- readFile "input"  
+    f <- readFile "input_01.txt"  
     let l =  map (stringToInt) . lines $ f
     putStr "Part 1: "
     putStr . show . rollingSum $ l

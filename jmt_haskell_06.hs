@@ -51,7 +51,7 @@ summarise :: Ord a => [a] -> [([a], Int)]
 summarise g = map (\x -> ([head x], length x)) . group . sort $ g
 
 main = do 
-  f <- readFile "input"
+  f <- readFile "input_06.txt"
   let ps = map (parseInput) $ lines f
   let xLim = maximum . map (fst) $ ps
   let yLim = maximum . map (snd) $ ps

@@ -38,7 +38,7 @@ sumMeta2 (Node m c)  = sum t
         t  = [ sumMeta2 (c !! i) | i <- m', i < (length c) ]
 
 main = do 
-  f <- readFile "input"
+  f <- readFile "input_08.txt"
   let ps = parseInput $ (head . lines $ f)
   let qs = evalState buildTree (ps)
   putStrLn "Part 1: "

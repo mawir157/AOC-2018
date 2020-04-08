@@ -98,7 +98,7 @@ sumOfDivisors n = sum (s ++ t)
 
 main :: IO()
 main = do
-  f <- readFile "input"
+  f <- readFile "input_18.txt"
   let l = lines $ f
   let ptr = read (take 1 $ drop 4 $ head l)::Int
   let i' = map (parseInput) $ drop 1 l

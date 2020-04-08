@@ -23,7 +23,7 @@ polar x y
   | otherwise                            = False
  
 main = do
-  f <- readFile "input"
+  f <- readFile "input_05.txt"
   let s = head $ lines f
   let r = reduce' s
   putStrLn "Part 1: "

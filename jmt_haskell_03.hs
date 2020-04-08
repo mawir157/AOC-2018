@@ -62,7 +62,7 @@ bestBox (x:y:xs) cs = if cx < cy then bestBox (x:xs) cs else bestBox (y:xs) cs
         cy = length $ filter (== True) (map (overlap $ y) (cs))
 
 main = do
-  f <- readFile "input"
+  f <- readFile "input_03.txt"
   let bs = map (parseInput) $ lines f
   --let bs = [Box 1 1 3 4 4, Box 2 3 1 4 4, Box 3 5 5 2 2]
   let gL = 1000

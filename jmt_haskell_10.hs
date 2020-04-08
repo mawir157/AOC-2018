@@ -67,7 +67,7 @@ allignStars (p,t)
         d' = dimns p'
 
 main = do
-  f <- readFile "input"
+  f <- readFile "input_10.txt"
   let p = map (parseInput) $ lines f
   let q = allignStars $ (p, 0)
   mapM_ putStrLn (toPrintable . fst $ q)

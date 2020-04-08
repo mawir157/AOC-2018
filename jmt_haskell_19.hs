@@ -64,7 +64,7 @@ runUntil n (g, x)
 
 main :: IO()
 main = do
-  f <- readFile "input"
+  f <- readFile "input_19.txt"
   let l = lines $ f
   let i = parseInput l
   let p10 = run 10 i
