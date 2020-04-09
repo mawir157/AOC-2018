@@ -28,8 +28,8 @@ part2 xs ws = findIndex (==ws) sublists
 --------------------------------------------------------------------------------
 main = do
   let initStateR = ([7,3], (1, 0))
-  putStrLn "Part 1:"
+  putStr "Part 1:"
   putStrLn . show $ part1 tailRecState 293801
 
-  putStrLn "Part 2:"
+  putStr "Part 2:"
   putStrLn . show $ part2 tailRecState [2,9,3,8,0,1]

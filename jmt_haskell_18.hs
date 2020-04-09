@@ -1,110 +1,81 @@
-import Data.Bits
 import Data.List.Split
+import qualified Data.Vector as Vec
 
-data OpCode = ADDR | ADDI | MULR | MULI | BANR | BANI | BORR | BORI |
-              SETR | SETI | GTIR | GTRI | GTRR | EQIR | EQRI | EQRR
-              deriving (Eq, Enum, Show)
+data Tile = OPEN | TREE | YARD  deriving (Eq)
 
-codes = [ADDR,ADDI,MULR,MULI,BANR,BANI,BORR,BORI,
-         SETR,SETI,GTIR,GTRI,GTRR,EQIR,EQRI,EQRR]
+type Grid = Vec.Vector Tile
 
-codesStr = ["addr","addi","mulr","muli","banr","bani","borr","bori",
-            "setr","seti","gtir","gtri","gtrr","eqir","eqri","eqrr"]
+getNeighbours :: Int -> Int -> [Int]
+getNeighbours n i = x
+  where (ix, iy) = indexToCoord n i
+        lx = max 0 (ix - 1)
+        hx = min (n-1) (ix + 1)
+        ly = max 0 (iy - 1)
+        hy = min (n-1) (iy + 1)
+        nCoord = [(x, y) | x <- [lx..hx], y <- [ly..hy], (x,y) /= (ix, iy)]
+        x = map (coordToIndex n) nCoord
+        indexToCoord n i = (i `mod` n, i `div` n)
+        coordToIndex n (x, y) = (n * y) + x
 
-strToOpCode :: String -> OpCode
-strToOpCode s = fst $ head $ dropWhile(\x -> snd x /= s) z
-  where z = zip codes codesStr
+parseInput :: [String] -> (Grid, Int)
+parseInput s = (k, n)
+  where n = length $ head s
+        k = Vec.fromList $ map (charToTile) $ collapse s
+        collapse [] = []
+        collapse (s:ss) = s ++ collapse ss
+        charToTile c
+          | c == '.' = OPEN
+          | c == '#' = YARD
+          | c == '|' = TREE
 
-parseInput :: String -> Instruction
-parseInput s = Instruction op t0 t1 t2
-  where op = strToOpCode $ take 4 s
-        t = splitOn " " (drop 5 s)
-        t0 = read(t!!0)::Int
-        t1 = read(t!!1)::Int
-        t2 = read(t!!2)::Int
+updateTile :: Tile -> [Tile] -> Tile
+updateTile t nbrs
+  | t == OPEN = if (ts >= 3) then TREE else OPEN
+  | t == TREE = if (ys >= 3) then YARD else TREE
+  | t == YARD = if ((ys >= 1) && (ts >= 1)) then YARD else OPEN
+  where os = length $ filter (\x -> x == OPEN) nbrs
+        ts = length $ filter (\x -> x == TREE) nbrs
+        ys = length $ filter (\x -> x == YARD) nbrs
 
-data Instruction = Instruction OpCode Int Int Int deriving (Show, Eq)
-op :: Instruction -> OpCode
-op (Instruction x _ _ _) = x
-av :: Instruction -> Int
-av (Instruction _ x _ _) = x
-bv :: Instruction -> Int
-bv (Instruction _ _ x _) = x
-cv :: Instruction -> Int
-cv (Instruction _ _ _ x) = x
+tick :: (Grid, Int) -> (Grid, Int)
+tick (g, n) = (g', n)
+  where i = [0..((length g)-1)]
+        nbrs = map (getNeighbours n) i
+        nbrTiles = map (gridAtArr g) nbrs
+        pairs = Vec.zip g (Vec.fromList nbrTiles)
+        g' = Vec.map (\x -> updateTile (fst x) (snd x)) pairs
+        gridAtArr g is = map (g Vec.! ) is
 
-type Machine = ([Int], Int)
+score :: Grid -> Int
+score g = trees * yards
+  where trees = length $ Vec.filter (\x -> x == TREE) g
+        yards = length $ Vec.filter (\x -> x == YARD) g
 
-setValue :: Machine -> Int -> Int -> Machine
-setValue (m,p) at val = (values, p)
-  where values = (take at m) ++ [val] ++ (drop (at + 1) m)
+run :: Int -> (Grid, Int) -> (Grid, Int)
+run 0 g = g
+run n g = run (n-1) (tick g)
 
-getValue :: Machine -> Int -> Int
-getValue (m,p) at = m!!at
-
-updateIntInd :: Machine -> Machine
-updateIntInd m = setValue m (snd m) (newValue + 1)
-  where newValue = getValue m $ snd m
-
-apply :: Machine -> Instruction -> Machine
-apply m i = updateIntInd $ applyOpCode m i $ op i
-
-run :: Machine -> [Instruction] -> Machine
-run m i
-  | a >= length i = m
-  | otherwise     = run m' i 
-  where a  = getValue m $ snd m
-        j  = i!!a
-        m' = apply m j
-
-brokenRun :: Machine -> [Instruction] -> Machine
-brokenRun m i
-  | a == 3        = m
-  | a >= length i = m
-  | otherwise     = brokenRun m' i 
-  where a  = getValue m $ snd m
-        j  = i!!a
-        m' = apply m j
-
-applyOpCode :: Machine -> Instruction -> OpCode -> Machine
-applyOpCode m i opp
-  | opp == ADDR = setValue m cVal ( aReg + bReg )
-  | opp == ADDI = setValue m cVal ( aReg + bVal )
-  | opp == MULR = setValue m cVal ( aReg * bReg )
-  | opp == MULI = setValue m cVal ( aReg * bVal )
-  | opp == BANR = setValue m cVal ( (.&.) aReg bReg )
-  | opp == BANI = setValue m cVal ( (.&.) aReg bVal )
-  | opp == BORR = setValue m cVal ( (.|.) aReg bReg )
-  | opp == BORI = setValue m cVal ( (.|.) aReg bVal )
-  | opp == SETR = setValue m cVal ( aReg )
-  | opp == SETI = setValue m cVal ( aVal )
-  | opp == GTIR = setValue m cVal ( if (aVal > bReg) then 1 else 0 )
-  | opp == GTRI = setValue m cVal ( if (aReg > bVal) then 1 else 0 )
-  | opp == GTRR = setValue m cVal ( if (aReg > bReg) then 1 else 0 )
-  | opp == EQIR = setValue m cVal ( if (aVal == bReg) then 1 else 0 )
-  | opp == EQRI = setValue m cVal ( if (aReg == bVal) then 1 else 0 )
-  | opp == EQRR = setValue m cVal ( if (aReg == bReg) then 1 else 0 )
-  where aVal = av i
-        bVal = bv i
-        cVal = cv i
-        aReg = getValue m aVal
-        bReg = getValue m bVal
-
-sumOfDivisors :: Int -> Int
-sumOfDivisors n = sum (s ++ t)
-  where r = takeWhile (\x -> (x * x) < n) [1..]
-        s = filter (\x -> n `mod` x == 0) r
-        t = map (\x -> n `div` x) s
+runUntil :: Int -> ((Grid, Int), Int) -> ((Grid, Int), Int)
+runUntil n (g, x)
+  | n == score (fst g') = (g', x')
+  | otherwise           = runUntil n (g', x')
+  where g' = tick g
+        x' = x + 1
 
 main :: IO()
 main = do
   f <- readFile "input_18.txt"
   let l = lines $ f
-  let ptr = read (take 1 $ drop 4 $ head l)::Int
-  let i' = map (parseInput) $ drop 1 l
+  let i = parseInput l
+  let p10 = run 10 i
+  putStr "Part 1: "
+  putStrLn $ show $ score (fst p10)
 
-  putStr "part 1: "
-  --putStrLn . show $ getValue (run ([0,0,0,0,0,0], ptr) i') 0
-  putStrLn . show $ sumOfDivisors $ getValue (brokenRun ([0,0,0,0,0,0], ptr) i') 1
-  putStr "part 2: "
-  putStrLn . show $ sumOfDivisors $ getValue (brokenRun ([1,0,0,0,0,0], ptr) i') 1
+  let burnIn = 501
+  let p500 = run burnIn i
+  let s = score (fst p500)
+  let j = runUntil s (p500, 0)
+  let reduced = (1000000000 - burnIn) `mod` (snd j)
+  let pFinal = run reduced p500
+  putStr "Part 2: "
+  putStrLn $ show $ score (fst pFinal)
