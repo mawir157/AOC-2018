@@ -103,8 +103,7 @@ main = do
   let ptr = read (take 1 $ drop 4 $ head l)::Int
   let i' = map (parseInput) $ drop 1 l
 
-  putStr "part 1: "
+  putStr "Part 1: "
   putStrLn . show $ getValue (run ([0,0,0,0,0,0], ptr) i') 0
-  -- putStrLn . show $ sumOfDivisors $ getValue (brokenRun ([0,0,0,0,0,0], ptr) i') 2
-  putStr "part 2: "
+  putStr "Part 2: "
   putStrLn . show $ sumOfDivisors $ getValue (brokenRun ([1,0,0,0,0,0], ptr) i') 2
