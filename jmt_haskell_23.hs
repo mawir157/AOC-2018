@@ -53,4 +53,4 @@ main = do
   let o = map (parseToOctohedron) t'
   let (oat, oab, obt, obb, oct, ocb, odt, odb) = foldl1 slice o 
   putStr "Part 2: "
-  putStrLn $ show (obb + ocb + odb)
+  putStrLn $ show oat
