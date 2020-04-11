@@ -62,7 +62,7 @@ apply m i = updateIntInd $ applyOpCode m i $ op i
 run :: Machine -> [Instruction] -> Machine
 run m i
   | a >= length i = m
-  | otherwise     = run m' i
+  | otherwise     = run m' i 
   where ptr = fromIntegral $ snd m
         a   = fromIntegral $ getValue m ptr
         j   = i!!a
@@ -72,7 +72,7 @@ brokenRun :: Machine -> [Instruction] -> Machine
 brokenRun m i
   | a == 28       = m
   | a >= length i = m
-  | otherwise     = brokenRun m' i
+  | otherwise     = brokenRun m' i 
   where ptr = fromIntegral $ snd m
         a   = fromIntegral $ getValue m ptr
         j  = i!!a
@@ -91,7 +91,7 @@ next3Change :: [Instruction] -> Machine -> Machine
 next3Change i m
   | getValue m' 3 /= getValue m 3 = m'
   | a >= length i                 = m
-  | otherwise                     = next3Change i m'
+  | otherwise                     = next3Change i m' 
   where ptr = fromIntegral $ snd m
         a   = fromIntegral $ getValue m ptr
         j  = i!!a
@@ -108,7 +108,7 @@ nextHaltInt :: Integer -> Integer
 nextHaltInt x = r3
   where (r1,r2,r3) = nHIRec (0, (.|.) x 65536, 14070682)
 
-nHIRec :: (Integer, Integer, Integer) -> (Integer, Integer, Integer)
+nHIRec :: (Integer, Integer, Integer) -> (Integer, Integer, Integer) 
 nHIRec (r1,r2,r3)
   | r2 == 0   = (r1,r2,r3)
   | otherwise = nHIRec (r1', r2', r3')
@@ -149,8 +149,8 @@ main = do
   let m = ([0,0,0,0,0,0], ptr)
 
   putStr "Part 1: "
-  putStrLn . show $ firstHalt m i
+  putStrLn . show $ firstHalt m i 
 
   putStr "Part 2: "
-  putStrLn . show $ nextHaltInt 0
+  let ss = iterate nextHaltInt 0
   putStrLn . show . last $ takeUntilDuplicate ss
