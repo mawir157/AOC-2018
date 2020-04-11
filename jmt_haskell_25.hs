@@ -23,8 +23,7 @@ inConst c p = or $ map (\x -> f x) c
   where f q = (manDist p q <= 3) 
 
 overlap :: Constellation -> Constellation -> Bool
-overlap c d = t
-  where t = or $ map (inConst c) d
+overlap c d = or $ map (inConst c) d
 
 collapse :: [Constellation] -> [Constellation]
 collapse [] = []
