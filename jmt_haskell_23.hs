@@ -14,12 +14,6 @@ parseLine s = ((p!!0, p!!1, p!!2), r')
         r = drop 2 $ dropWhile (\x -> x /= 'r') s
         r' = read r :: Integer
 
-biggestBot :: [Nanobot] -> Nanobot 
-biggestBot [x] = x
-biggestBot (x:y:xs)
-  | snd x > snd y = biggestBot (x:xs)
-  | otherwise     = biggestBot (y:xs) 
-
 manDist :: Point -> Point -> Integer
 manDist (x1,y1,z1) (x2,y2,z2) = abs (x1 - x2) + abs (y1 - y2) + abs (z1 - z2)
 
