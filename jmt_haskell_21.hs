@@ -1,7 +1,6 @@
 import Data.Bits
 import Data.List.Split
 import qualified Data.Set as Set
-import Debug.Trace
 
 data OpCode = ADDR | ADDI | MULR | MULI | BANR | BANI | BORR | BORI |
               SETR | SETI | GTIR | GTRI | GTRR | EQIR | EQRI | EQRR

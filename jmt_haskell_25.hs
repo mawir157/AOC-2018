@@ -20,7 +20,7 @@ buildConsts (c:cs) p
 
 inConst :: Constellation -> Point -> Bool
 inConst c p = or $ map (\x -> f x) c
-  where f q = (manDist p q <= 3) 
+  where f q = (manDist p q <= 3)
 
 overlap :: Constellation -> Constellation -> Bool
 overlap c d = or $ map (inConst c) d
@@ -45,4 +45,3 @@ main = do
   let r = collapseRecur $ foldl (buildConsts) [] t
   putStr "Part 1: "
   putStrLn . show $ length r
-
