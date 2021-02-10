@@ -1,0 +1,13 @@
+# Ignore input files
+/input/*
+# Haskell build files
+/Haskell/*
+!/Haskell/*.hs
+!/Haskell/run.sh
+# Go files
+/Go/*
+!/Go/*.go
+!/Go/run.sh
+# Rust build files
+/Cpp/*
+!/Cpp/*.out
