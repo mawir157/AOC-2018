@@ -10,4 +10,5 @@
 !/Go/run.sh
 # Rust build files
 /Cpp/*
-!/Cpp/*.out
+!/Cpp/*.cpp
+!/Cpp/runs.sh
